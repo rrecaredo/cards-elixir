@@ -1,4 +1,7 @@
 defmodule Cards do
+  @moduledoc """
+    Provides methods for creating and handling decks of hands
+  """
   def create_deck do
     values = ["Ace", "Two", "Three", "Four", "Five"]
     suits = ["Spades", "Clubs", "Hearts", "Diamons"]
@@ -23,5 +26,18 @@ defmodule Cards do
   def save(deck, filename) do
     binary = :erlang.term_to_binary(deck)
     File.write(filename, binary)
+  end
+
+  def load( filename) do
+    case File.read(filename) do
+      { :ok, binary } -> :erlang.binary_to_term(binary)
+      { :error, _ } -> "That file does not exist" 
+    end
+  end
+
+  def create_hand(hand_size) do
+    Cards.create_deck
+    |> Cards.shuffle
+    |> Cards.deal(hand_size)
   end
 end
